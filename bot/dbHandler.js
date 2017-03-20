@@ -1,11 +1,10 @@
 const MongoClient = require('mongodb').MongoClient;
 const auth = require('./auth.json');
-const config = require('./../config.json');
 
 const dbHandler = {};
 
 dbHandler.getConnection = function (callback) {
-    MongoClient.connect(auth[config.env].db, (err, db) => {
+    MongoClient.connect(auth[this.env].db, (err, db) => {
         if (err) {
             console.log("error connecting to db");
         } else {

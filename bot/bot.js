@@ -1,6 +1,5 @@
 const express = require('express');
 const Discord = require('discord.js');
-const config = require('./../config.json');
 const auth = require('./auth.json');
 const db = require('./dbHandler');
 const _ = require("underscore");
@@ -16,11 +15,11 @@ const bot = {
 };
 
 bot.login = function () {
-    this.client.login(auth[config.env].token);
+    this.client.login(auth[this.env].token);
 };
 
 bot.client.on('ready', () => {
-    console.log(`Announce-o-tron${config.env === 'dev' ? '-dev' : ""} is ready`);
+    console.log(`Announce-o-tron${bot.env === 'development' ? '-dev' : ""} is ready`);
 });
 
 bot.client.on('message', message => {

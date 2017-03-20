@@ -11,6 +11,7 @@ var users = require('./routes/users');
 var app = express();
 
 const bot = require('./bot/bot.js');
+const db = require('./bot/dbHandler');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,7 +62,8 @@ app.use(function (err, req, res, next) {
 /*
  * bot setup
  */
+db.env = app.get('env');
+bot.env = app.get('env');
 bot.login();
 
 module.exports = app;
-console.log("Express ready");
