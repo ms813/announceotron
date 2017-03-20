@@ -1,0 +1,22 @@
+extends layout
+
+block style
+    style.
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+block content
+    p Guild found!
+    table
+        thead
+            th Entries
+        tbody
+            for user in users
+                tr
+                    td= user.username
+                for theme in user.themes
+                    tr
+                        td= theme.path
+                        td= theme.weight

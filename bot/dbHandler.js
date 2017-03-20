@@ -123,4 +123,18 @@ dbHandler.setMeta = function (guildId, data, callback) {
         })
     });
 };
+
+dbHandler.getGuild = function(guildId, callback){
+    this.getConnection(db => {
+       db.collection(guildId, (err, collection) =>{
+           if(err){
+               callback(err);
+           } else{
+               collection.find().toArray((err, data) =>{
+                   callback(err, data);
+               });
+           }
+       })
+    });
+};
 module.exports = dbHandler;

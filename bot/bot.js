@@ -11,11 +11,12 @@ const maxFileSize = 10485760;
 const validFileExtensions = ["mp3", "wav", "ogg"];
 
 const bot = {
-    client: new Discord.Client()
+    client: new Discord.Client(),
 };
 
 bot.login = function () {
-    this.client.login(auth[this.env].token);
+    let token = auth[bot.env].token;
+    this.client.login(token);
 };
 
 bot.client.on('ready', () => {
