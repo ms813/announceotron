@@ -1,0 +1,6 @@
+Put a back tick (\`, left of the **1** key) before commands to access the theme music bot.
+
+\`add *<weight>*: post a sound file and the word *add* to add it to your list of theme tunes
+\`list: list all of the theme songs you have registered and their probability weightings
+\`update *<file_name> <new_weight>*: change the probability of hearing that theme tune
+\`remove *<file_name>*: delete a theme song from my database
