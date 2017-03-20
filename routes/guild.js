@@ -15,18 +15,30 @@ const showGuild = function (req, res, next) {
             });
 
             let imeta = data.indexOf(meta);
-            if (imeta > -1){
+            if (imeta > -1) {
                 data.splice(imeta, 1);
-                users = data;
             }
-            console.log(meta)
-            console.log(users)
-            res.render("guild_dashboard", {meta: meta, users: users});
+            users = data;
+            res.render("guild_dashboard", {guildId: guildId, meta: meta, users: users});
         }
     });
 };
 
-router.post('/:guildId', showGuild);
-router.get('/:guildId', showGuild);
+
+const updateWeight = function (req, res, next) {
+    let guildId = req.params.guildId;
+    let userId = req.params.userId;
+    let themePath = req.params.themePath;
+    let weight = req.params.weight;
+
+    db.updateWeight(guildId, userId, themePath, weight, (err, result) => {
+        res.send("done");
+    });
+};
+
+router.post('/:guildId$', showGuild);
+router.get('/:guildId$', showGuild);
+
+router.post('/:guildId/:userId/:themePath/update_weight/:weight', updateWeight);
 
 module.exports = router;

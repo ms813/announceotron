@@ -128,7 +128,7 @@ bot.client.on('voiceStateUpdate', (oldMember, newMember) => {
     //channel === undefined if a member leaves the channel
     //only play music if a member that is not the bot joins a channel
     //only play if no other song is playing
-    if (channel && channelJoined && id !== auth.botId) {
+    if (channel && channelJoined && id !== auth[bot.env].botId) {
         console.log(newMember.user.username + " joined " + newMember.guild.name + "/" + newMember.voiceChannel.name);
         let userThemeData = db.getThemeData(guildId, id, (err, item) => {
 
