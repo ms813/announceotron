@@ -20,13 +20,15 @@ block content
         tbody
             for user in users
                 tr
-                    td(colspan='3')= user.username
+                    td(colspan='3') #{user.username}&nbsp;
+                        a(href="#") Add
+
                 for theme in user.themes
                     tr
                         td
                         td
                             a.theme(
-                            href='#'
+                            href="javascript:void(0)"
                             data-url='/#{guildId}/#{user.id}/#{theme.path}'
                             ) #{theme.path}
                         td.weight(data-userId="#{user.id}" data-theme="#{theme.path}")= theme.weight

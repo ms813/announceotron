@@ -1,5 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const auth = require('./auth.json');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const dbHandler = {};
 
@@ -124,17 +126,49 @@ dbHandler.setMeta = function (guildId, data, callback) {
     });
 };
 
-dbHandler.getGuild = function(guildId, callback){
+dbHandler.getGuild = function (guildId, callback) {
     this.getConnection(db => {
-       db.collection(guildId, (err, collection) =>{
-           if(err){
-               callback(err);
-           } else{
-               collection.find().toArray((err, data) =>{
-                   callback(err, data);
-               });
-           }
-       })
+        db.collection(guildId, (err, collection) => {
+            if (err) {
+                callback(err);
+            } else {
+                collection.find().toArray((err, data) => {
+                    callback(err, data);
+                });
+            }
+        })
     });
 };
+
+dbHandler.createWebAccount = function (userId, password, guildAdminId, callback) {
+
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        let entry = {
+            _id: userId,
+            password: hash,
+            guildAdmin: [guildAdminId]
+        };
+
+        dbHandler.getConnection(db => {
+            db.collection("auth", (err, collection) => {
+                collection.insert(entry, callback);
+            });
+        });
+    });
+};
+
+dbHandler.setGuildAdmin = function (userId, guildId) {
+
+};
+
+dbHandler.resetWebPassword = function (userId, password, callback) {
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        dbHandler.getConnection(db => {
+            db.collection("auth", (err, collection) =>{
+               collection.updateOne( {_id : userId}, {$set : {password : hash}}, callback);
+            });
+        });
+    });
+};
+
 module.exports = dbHandler;

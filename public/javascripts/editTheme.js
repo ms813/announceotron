@@ -23,11 +23,10 @@ $(document).ready(() => {
             let url = guildId + "/" + userId + "/" + themePath + "/update_weight/" + weight;
             let req = $.post(url, weight);
             req.done((data, err, jqXHR) => {
-                console.log(data)
                 console.log("Weight updated successfully");
             });
 
-            req.fail((data, err, jqXHR) => console.log(err));
+            req.fail((data, err, jqXHR) => console.log(`Error updating weight: ${err}`));
         });
     });
 

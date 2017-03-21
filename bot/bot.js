@@ -1,5 +1,6 @@
 const express = require('express');
 const Discord = require('discord.js');
+const generator = require('generate-password');
 const auth = require('./auth.json');
 const db = require('./dbHandler');
 const _ = require("underscore");
@@ -110,6 +111,10 @@ bot.client.on('message', message => {
             console.log("Meta update:");
             console.log(status);
         });
+    } else if (msgParts[0] === "`webauth") {
+        createWebAccount(message.guild, message.author);
+    } else if (msgParts[0] === "`resetWebPassword") {
+        resetWebPassword(message.author);
     }
 });
 
@@ -329,5 +334,54 @@ const setMeta = function (guild, parts, cb) {
 
     cb("meta set");
 };
+
+const createWebAccount = function (guild, user) {
+    let password = generatePassword();
+
+    let reply = function (err, result) {
+        if (err) {
+            if (err.code === 11000) {
+                user.sendMessage(
+                    `You already have an account at ${auth[bot.env].weburl}.\nYour username is your Discord ID: ${user.id}.\nSend a message in chat with \`resetWebPassword and I'll send you a new password.`
+                );
+            } else {
+                console.log("Error creating account");
+                console.log(err);
+            }
+        } else {
+            user.sendMessage(
+                `An account has been created for you at ${auth[bot.env].weburl}.\nYour username is your Discord ID: ${user.id}.\nYour password is: ${password}.\nPlease change it once you have logged in.`
+            );
+        }
+    };
+
+    guild.fetchMember(user.id).then(member => {
+        if (member.hasPermission("ADMINISTRATOR")) {
+            db.createWebAccount(user.id, password, guild.id, reply);
+        } else {
+            db.createWebAccount(user.id, password, cb = reply);
+        }
+    });
+};
+
+const resetWebPassword = function (user) {
+    let password = generatePassword();
+
+    db.resetWebPassword(user.id, password, (err, result) => {
+        if (err) {
+            console.log("Error updating password");
+        } else {
+            user.sendMessage(`Your new password for ${auth[bot.env].weburl} is ${password}`);
+        }
+    });
+};
+
+const generatePassword = function () {
+    return generator.generate({
+        length: 16,
+        uppercase: true,
+        numbers: true
+    });
+}
 
 module.exports = bot;
